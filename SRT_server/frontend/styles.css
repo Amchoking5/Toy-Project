@@ -1,0 +1,121 @@
+:root {
+  --bg: #0b1220;
+  --card: #121a2a;
+  --text: #e8eefc;
+  --muted: #a7b3d4;
+  --border: rgba(255,255,255,0.08);
+  --accent: #6ea8fe;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+  background: radial-gradient(1200px 500px at 20% 0%, rgba(110,168,254,0.18), transparent 60%),
+              radial-gradient(900px 400px at 80% 10%, rgba(167,179,212,0.12), transparent 60%),
+              var(--bg);
+  color: var(--text);
+}
+
+.container { max-width: 920px; margin: 36px auto; padding: 0 16px; }
+.header h1 { margin: 0 0 6px; font-size: 28px; }
+.sub { margin: 0 0 18px; color: var(--muted); }
+
+.card {
+  background: rgba(18, 26, 42, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  margin-bottom: 14px;
+}
+
+.h2 { margin: 0 0 10px; font-size: 16px; color: #dce6ff; }
+
+/* ✅ 줄바꿈 폼 레이아웃 */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field span { color: var(--muted); font-size: 13px; }
+.field small { color: var(--muted); opacity: 0.9; font-size: 12px; }
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: rgba(110,168,254,0.6);
+  box-shadow: 0 0 0 3px rgba(110,168,254,0.15);
+}
+
+/* ✅ wide: 날짜/시간/이메일은 가로 전체 */
+.field.wide { grid-column: span 2; }
+
+/* ✅ 시간 범위 A~B */
+.range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.range input { flex: 1; }
+
+.tilde {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+/* ✅ select 옵션 하얀 배경+하얀 글씨 문제 해결 */
+select option {
+  background: #ffffff;
+  color: #111111;
+}
+
+/* Windows/Chromium 다크 UI 힌트 */
+select { color-scheme: dark; }
+
+/* 버튼 */
+.actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+.btn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(110,168,254,0.35);
+  background: rgba(110,168,254,0.18);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn:hover { background: rgba(110,168,254,0.26); }
+
+/* 상태 출력 */
+.out {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  overflow: auto;
+  min-height: 54px;
+  color: #dce6ff;
+}
+
+@media (max-width: 740px) {
+  .row { grid-template-columns: 1fr; }
+  .field.wide { grid-column: span 1; }
+}

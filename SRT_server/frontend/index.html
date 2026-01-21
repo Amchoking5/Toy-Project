@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SRT 자동 예약</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>SRT 자동 예약</h1>
+      <p class="sub">작업 결과는 이메일로만 전송됩니다.</p>
+    </header>
+
+    <form id="f" class="card">
+      <div class="stack">
+        <!-- 1) ID / PW -->
+        <div class="row">
+          <label class="field">
+            <span>ID (휴대폰번호,회원번호)</span>
+            <input name="srt_id" placeholder="01012345678" autocomplete="username" required />
+          </label>
+
+          <label class="field">
+            <span>비밀번호</span>
+            <input name="srt_pw" type="password" autocomplete="current-password" required />
+          </label>
+        </div>
+
+        <!-- 2) 출발 / 도착 -->
+        <div class="row">
+          <label class="field">
+            <span>출발역</span>
+            <input name="dep" value="수서" required />
+          </label>
+
+          <label class="field">
+            <span>도착역</span>
+            <input name="arr" value="부산" required />
+          </label>
+        </div>
+
+        <!-- 3) 날짜 (wide) -->
+        <div class="row">
+          <label class="field wide">
+            <span>날짜</span>
+            <input name="date_ui" type="date" required />
+          </label>
+        </div>
+
+        <!-- 4) 시간 범위 (wide) -->
+        <div class="row">
+          <label class="field wide">
+            <span>시간 범위</span>
+            <div class="range">
+              <input name="start_ui" type="time" step="60" value="05:00" required />
+              <span class="tilde">~</span>
+              <input name="limit_ui" type="time" step="60" value="23:59" required />
+            </div>
+            <small>시간 범위 내에서 출발하는 열차만 예매합니다.</small>
+          </label>
+        </div>
+
+        <!-- 5) 이메일 (wide) -->
+        <div class="row">
+          <label class="field wide">
+            <span>알림 이메일</span>
+            <input name="email" type="email" placeholder="you@example.com" required />
+          </label>
+        </div>
+
+        <!-- 6) 좌석 선호 / 조회간격 -->
+        <div class="row">
+          <label class="field">
+            <span>좌석 선호</span>
+            <select name="seat_pref">
+              <option value="general">일반실만</option>
+              <option value="special">특실만</option>
+              <option value="any">아무거나</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>조회 간격(초)</span>
+            <input name="interval_sec" type="number" min="1" max="30" step="0.5" value="3" required />
+          </label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn">시작</button>
+      </div>
+    </form>
+
+    <section class="card">
+      <h2 class="h2">상태</h2>
+      <pre id="out" class="out">대기 중…</pre>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
