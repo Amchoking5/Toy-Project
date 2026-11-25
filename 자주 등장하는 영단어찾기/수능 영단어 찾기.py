@@ -70,7 +70,7 @@ def word_test(i):
 def add_dictionary(i):
     global word,word_count,add_meaning_entry
     meaning=add_meaning_entry.get()
-    if(meaning=""):
+    if(meaning==""):
         msgbox.showerror("에러","단어의 뜻을 입력해주세요!")
         return
     save_file = open("bestword.txt","a")

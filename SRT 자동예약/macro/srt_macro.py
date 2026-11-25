@@ -2,6 +2,7 @@ import os
 import time
 import random
 from datetime import datetime
+from pathlib import Path
 
 from SRT import SRT
 from SRT.errors import SRTResponseError, SRTLoginError, SRTNetFunnelError
@@ -11,32 +12,53 @@ from email.mime.text import MIMEText
 from email.header import Header
 
 
+def load_env(path: Path) -> None:
+    """같은 폴더의 .env(KEY=VALUE)를 환경변수로 읽는다. 이미 설정된 값은 덮어쓰지 않는다."""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+load_env(Path(__file__).with_name(".env"))
+
+
+def env(key: str, default: str | None = None) -> str:
+    v = os.environ.get(key, default)
+    if v is None:
+        raise SystemExit(f"[ERROR] 환경변수 {key}가 없습니다. .env.example을 참고해 .env를 만들어 주세요.")
+    return v
+
+
 # =========================
-# 테스트용 하드코딩 설정
+# 설정 (.env 또는 환경변수)
 # =========================
 CONFIG = {
     # SRT 계정
-    "srt_id": "***REMOVED***",
-    "srt_pw": "***REMOVED***",
+    "srt_id": env("SRT_ID"),
+    "srt_pw": env("SRT_PW"),
 
     # 조회 조건
-    "dep": "수서",
-    "arr": "대전",
-    "date": "20260131",       # YYYYMMDD
-    "start_time": "110000",   # HHMMSS
-    "limit_time": "130000",   # HHMMSS (이 시간 지나면 종료)
+    "dep": env("DEP", "수서"),
+    "arr": env("ARR", "대전"),
+    "date": env("DATE"),                      # YYYYMMDD
+    "start_time": env("START_TIME", "000000"),  # HHMMSS
+    "limit_time": env("LIMIT_TIME", "235959"),  # HHMMSS (이 시간 지나면 종료)
 
-    "seat_pref": "general",   # general | special | any
-    "interval_sec": 5.0,
+    "seat_pref": env("SEAT_PREF", "general"),  # general | special | any
+    "interval_sec": float(env("INTERVAL_SEC", "5")),
 
     # 성공/실패 알림 받을 이메일
-    "to_email": "amchoking@kaist.ac.kr",
+    "to_email": env("TO_EMAIL"),
 
-    # 메일 발송 (테스트용 하드코딩)
-    "smtp_host": "smtp.gmail.com",
-    "smtp_port": 587,
-    "sender_email": "yoocpp@gmail.com",
-    "sender_app_pw": "***REMOVED***",  # 테스트용 하드코딩 OK라고 해서 그대로 둠
+    # 메일 발송 (Gmail 앱 비밀번호)
+    "smtp_host": env("SMTP_HOST", "smtp.gmail.com"),
+    "smtp_port": int(env("SMTP_PORT", "587")),
+    "sender_email": env("SENDER_EMAIL"),
+    "sender_app_pw": env("SENDER_APP_PW"),
 }
 
 

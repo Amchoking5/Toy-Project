@@ -1,0 +1,30 @@
+# 이 저장소(Toy-Project)에 푸시되면 홈페이지 저장소(Amchoking5.github.io)의 배포 workflow를 실행시킨다.
+name: Notify blog
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Amchoking5.github.io rebuild
+        env:
+          GH_TOKEN: ${{ secrets.PORTPOLIO_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::PORTPOLIO_DISPATCH_TOKEN 시크릿이 비어 있습니다 (이름/위치 확인)"
+            exit 1
+          fi
+          code=$(curl -sS -o resp.txt -w "%{http_code}" -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/Amchoking5/Amchoking5.github.io/dispatches \
+            -d '{"event_type":"toy-project-updated"}')
+          if [ "$code" != "204" ]; then
+            echo "::error::dispatch 실패 HTTP $code: $(tr -d '\n' < resp.txt)"
+            exit 1
+          fi
+          echo "dispatch OK"

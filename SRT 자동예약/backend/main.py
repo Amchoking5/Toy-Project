@@ -1,5 +1,6 @@
-#***REMOVED***
 import asyncio
+import os
+from pathlib import Path
 import time
 import uuid
 from datetime import datetime
@@ -18,6 +19,19 @@ from email.header import Header
 
 import logging
 
+
+def load_env(path: Path) -> None:
+    """같은 폴더의 .env(KEY=VALUE)를 환경변수로 읽는다. 이미 설정된 값은 덮어쓰지 않는다."""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+load_env(Path(__file__).with_name(".env"))
 
 app = FastAPI(title="SRT Macro API", version="0.1")
 logger = logging.getLogger("uvicorn.error")
@@ -53,10 +67,10 @@ def _parse_hhmmss(date_yyyymmdd: str, hhmmss: str) -> datetime:
 
 
 def send_email(subject: str, body: str, to_email: str) -> None:
-    SMTP_HOST = "smtp.gmail.com"
-    SMTP_PORT = 587
-    SENDER_EMAIL = "yoocpp@gmail.com"
-    SENDER_APP_PW = "***REMOVED***"
+    SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+    SENDER_EMAIL = os.environ["SENDER_EMAIL"]
+    SENDER_APP_PW = os.environ["SENDER_APP_PW"]
 
     msg = MIMEText(body, _charset="utf-8")
     msg["Subject"] = Header(subject, "utf-8")

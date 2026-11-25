@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.messagebox as msgbox
 
 gugu = [[0 for col in range(9)] for row in range(9)]
 canx = [[False for col in range(10)] for row in range(10)]
@@ -40,14 +41,12 @@ class Sudoku_entry(Frame):
         if((a+b)%2==0):
             self.e=Entry(root,width=2,font = "Helvetica 18 bold",bg="white")
             self.e.grid(row=row1,column=column1)
-            self.e.insert(0,"0")
         else:
             self.e=Entry(root,width=2,font = "Helvetica 18 bold",bg="grey")
             self.e.grid(row=row1,column=column1)
-            self.e.insert(0,"0")
 
     def get(self):
-        return int(self.e.get())
+        return self.e.get()
 
 def resetall():
     global solved,gugu,canx,cany,cansq,entrys
@@ -56,7 +55,6 @@ def resetall():
         for j in range(9):
             gugu[i][j]=0
             entrys[i][j].e.delete(0,END)
-            entrys[i][j].e.insert(0,"0")
     for i in range(10):
         for j in range(10):
             canx[i][j]=False
@@ -68,18 +66,28 @@ def solve_sudoku():
     global solved,gugu,canx,cany,cansq,entrys
     for i in range(9):
         for j in range(9):
-            gugu[i][j]=entrys[i][j].get()
+            if(len(entrys[i][j].get())==0):
+                gugu[i][j]=0
+            else:
+                gugu[i][j]=int(entrys[i][j].get())
             if(gugu[i][j]):
+                if(canx[i][gugu[i][j]] or cany[j][gugu[i][j]] or cansq[i//3][j//3][gugu[i][j]]):
+                    msgbox.showerror("에러","풀 수 없는 문제입니다!")
+                    return
                 canx[i][gugu[i][j]]=True
                 cany[j][gugu[i][j]]=True
                 cansq[i//3][j//3][gugu[i][j]]=True
     
     solve(0)
 
-    for i in range(9):
-        for j in range(9):
-            entrys[i][j].e.delete(0,END)
-            entrys[i][j].e.insert(0,str(gugu[i][j]))
+    if (solved):
+        for i in range(9):
+            for j in range(9):
+                entrys[i][j].e.delete(0,END)
+                entrys[i][j].e.insert(0,str(gugu[i][j]))
+    else:
+        msgbox.showerror("에러","풀 수 없는 문제입니다!")
+        
 
 root=Tk()
 root.title("SUDOKU")
