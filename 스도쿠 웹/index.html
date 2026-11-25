@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>스도쿠 풀이</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>스도쿠 풀이</h1>
+      <p class="sub">칸을 눌러 숫자를 고르거나, 스도쿠 사진을 <b>업로드</b>해서 판을 불러오세요. 막힌 칸은 💡 힌트로 정답을 볼 수 있어요.</p>
+    </header>
+
+    <div class="board-wrap" id="board-wrap">
+      <div class="board" id="board" role="grid" aria-label="스도쿠 판"></div>
+      <div class="picker" id="picker" role="menu" aria-label="숫자 선택" hidden></div>
+    </div>
+
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <div class="actions">
+      <button class="primary" id="solve">풀기</button>
+      <button id="clear">지우기</button>
+      <button id="upload">업로드</button>
+      <input type="file" id="file" accept="image/*" hidden>
+    </div>
+  </main>
+
+  <script src="solver.js"></script>
+  <script src="ocr.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
